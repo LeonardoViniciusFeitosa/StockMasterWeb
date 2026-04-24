@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+header, .section{
+    background-color: #F1F1F9;
+}
+
+body{
+    background-color: #e7e7e7;
+}
+
+.logotype{
+    height: 50px;
+    width: auto;
+}
+
+.brand-name{
+ font-family: "Inter", sans-serif;
+ }
+
+.layout{
+    height: 100vh;
+}
+
+.sidebar{
+    height: 100%;
+}
+
+.sidebar-link{
+    display: block;
+    padding: 15px;
+}
+
+.sidebar-link:hover{
+    background-color: rgba(255, 255, 255, 0.2)
+}
+
+.sidebar .active{
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.content-area{
+    height: 100%;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+@media (max-width: 576px) {
+  #offcanvasMenu {
+    max-width: 80%;
+  }
+}
+
+.collapsing {
+  transition: height 0.25s ease;
+}
+
+input[readonly] {
+  background-color: #e6e7e9 !important;
+  opacity: 1; /* evita ficar “apagado demais” */
+}
+
+.table-container {
+    max-height: 260px; /* ajusta conforme teu layout */
+    overflow-y: auto;
+}
+
+.table-container thead th {
+    position: sticky;
+    top: 0;
+    background-color: white; /* importante */
+    z-index: 1;
+}
