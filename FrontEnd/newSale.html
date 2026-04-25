@@ -1,275 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar venda</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
+    <title>Venda</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/b2f3875084.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="media/img/Logo.png" type="image/x-icon">
 </head>
-
-<body> <!-- Header -->
-
+<body>
     <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1055;"></div>
-
-    <header class="shadow px-4 py-2">
-        <div class="container-fluid d-flex align-items-center justify-content-between"> <!-- Logo -->
-            <div class="d-flex align-items-center"> <img src="media/img/Logo.png" class="logotype me-2"
-                    alt="StockMaster Logo"> <span class="text-primary fw-bold fs-4">StockMaster</span> </div>
-            <!-- Itens do header (visíveis em telas grandes) -->
-            <div class="d-none d-xl-flex align-items-center gap-3"> <a href="#"
-                    class="text-secondary fs-5 text-decoration-none">Configurações</a>
-                <div class="vr"></div> <a href="#" class="text-secondary fs-5 text-decoration-none">Sair</a>
-                <div class="vr"></div> <a href="#"
-                    class="d-flex align-items-center gap-2 text-secondary text-decoration-none"> <i
-                        class="fa-solid fa-circle-user fs-3"></i> <span class="fs-5">Usuário</span> </a>
-            </div> <!-- Hamburger (somente em telas pequenas) --> <button class="btn d-xl-none" type="button"
-                data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu"
-                aria-label="Toggle navigation"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                    fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M2.5 12.5a.5.5 0 010-1h11a.5.5 0 010 1h-11zm0-4a.5.5 0 010-1h11a.5.5 0 010 1h-11zm0-4a.5.5 0 010-1h11a.5.5 0 010 1h-11z" />
-                </svg> </button>
-        </div>
-    </header>
+    <div id="headerMount"></div>
     <div class="container-fluid">
         <div class="row layout">
-
-            <!-- Sidebar -->
-            <aside class="col-xl-2 d-none d-xl-block sidebar shadow-lg bg-primary px-0 py-3">
-                <nav class="sidebar-menu">
-
-                    <a href="Dashboard.html" class="sidebar-link text-decoration-none text-white fs-5 mb-2">
-                        <i class="fa-solid fa-chart-line me-2"></i>
-                        Dashboard
-                    </a>
-
-                    <!-- Vendas -->
-
-                    <a href="#menuVendas" class="sidebar-link text-decoration-none text-white fs-5 mb-2 active"
-                        data-bs-toggle="collapse">
-                        <i class="fa-solid fa-money-bills me-2"></i>
-                        Vendas
-                    </a>
-
-                    <div class="collapse submenu mb-2" id="menuVendas">
-                        <a href="#" class="d-block ms-5 text-white text-decoration-none">• Cadastrar
-                            Venda</a>
-                        <a href="SaleList.html" class="d-block ms-5 text-white text-decoration-none">• Últimas
-                            Vendas</a>
-                    </div>
-
-                    <!-- Estoque -->
-
-                    <a href="#menuEstoque" class="sidebar-link text-decoration-none text-white fs-5 mb-2"
-                        data-bs-toggle="collapse">
-                        <i class="fa-solid fa-box-open me-2"></i>
-                        Estoque
-                    </a>
-
-                    <div class="collapse submenu mb-2" id="menuEstoque">
-                        <a href="newMovimentation.html" class="d-block ms-5 text-white text-decoration-none">•
-                            Movimentações</a>
-                    </div>
-
-                    <!-- Produtos -->
-                    <a href="#menuProdutos" class="sidebar-link text-decoration-none text-white fs-5 mb-2"
-                        data-bs-toggle="collapse">
-                        <i class="fa-solid fa-bag-shopping me-2"></i>
-                        Produtos
-                    </a>
-
-                    <div class="collapse submenu mb-2" id="menuProdutos">
-                        <a href="newProduct.html" class="d-block ms-5 text-white text-decoration-none">• Cadastrar
-                            Produto</a>
-                        <a href="templateList.html" class="d-block ms-5 text-white text-decoration-none">• Lista de
-                            Produto</a>
-                    </div>
-
-                    <!-- Cliente -->
-                    <a href="#menuClientes" class="sidebar-link text-decoration-none text-white fs-5 mb-2"
-                        data-bs-toggle="collapse">
-                        <i class="fa-solid fa-person-walking-luggage me-2"></i>
-                        Clientes
-                    </a>
-
-                    <div class="collapse submenu mb-2" id="menuClientes">
-                        <a href="newCustomer.html" class="d-block ms-5 text-white text-decoration-none">• Cadastrar
-                            Cliente</a>
-                        <a href="templateList.html" class="d-block ms-5 text-white text-decoration-none">• Lista de
-                            Clientes</a>
-                    </div>
-
-                    <!-- Fornecedor -->
-                    <a href="#menuFornecedor" class="sidebar-link text-decoration-none text-white fs-5 mb-2"
-                        data-bs-toggle="collapse">
-                        <i class="fa-solid fa-people-carry-box me-2"></i>
-                        Fornecedor
-                    </a>
-
-                    <div class="collapse submenu mb-2" id="menuFornecedor">
-                        <a href="newSupplier.html" class="d-block ms-5 text-white text-decoration-none">• Cadastrar
-                            Fornecedor</a>
-                        <a href="templateList.html" class="d-block ms-5 text-white text-decoration-none">• Lista de
-                            Fornecedores</a>
-                    </div>
-
-                    <!-- Funcionário -->
-                    <a href="#menuFuncionario" class="sidebar-link text-decoration-none text-white fs-5 mb-2"
-                        data-bs-toggle="collapse">
-                        <i class="fa-solid fa-users-gear me-2"></i>
-                        Funcionário
-                    </a>
-
-                    <div class="collapse submenu" id="menuFuncionario">
-                        <a href="newEmployer.html" class="d-block ms-5 text-white text-decoration-none">• Cadastrar novo
-                            Funcionário</a>
-                        <a href="templateList.html" class="d-block ms-5 text-white text-decoration-none">• Lista de
-                            Funcionários</a>
-                    </div>
-                </nav>
-            </aside>
-
-
+            <aside id="sidebarMount"></aside>
             <main class="col-xl-10 col-12 content-area d-flex flex-column align-items-center">
                 <div class="screen col-10">
-                    <h1>Cadastro de vendas</h1>
-                    <h5 class="text-secondary">Cadastre uma venda realizada</h5>
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                        <div>
+                            <h1>Cadastro de Vendas</h1>
+                            <h5 class="text-secondary">Cadastre uma venda realizada</h5>
+                        </div>
+                        <a href="SaleList.html" class="btn btn-outline-primary">Ver Lista</a>
+                    </div>
                     <div class="section shadow-lg p-4">
-                        <h4 class="d-flex flex-column ">Informações básicas</h4>
-                        <hr class="m-0 text-secondary">
-                        <div class="form-group mt-3">
-                            <div class="row d-flex justify-content-between">
+                        <form id="saleForm">
+                            <div class="row g-3">
                                 <div class="col-12 col-md-6">
-                                    <div class="d-flex align-items-start"> <label for="customer"
-                                            class="form-label fs-4 fw-bold me-1"><i
-                                                class="fa-solid fa-person-walking-luggage me-2 text-primary"></i>Cliente</label>
-                                        <small class="text-muted">(Opcional)</small>
-                                    </div>
-                                    <div class="position-relative"> <i
-                                            class="fa-solid fa-bars position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary fw-bold"></i>
-                                        <select class="form-select ps-5 border bg-light" id="customer">
-                                            <option value="">Selecione...</option>
-                                        </select>
-                                    </div>
+                                    <label for="customerId" class="form-label fs-5 fw-bold">Cliente</label>
+                                    <select id="customerId" class="form-select bg-light" required></select>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <div class="d-flex align-items-start"> <label for="address"
-                                            class="form-label fs-4 fw-bold me-1"><i
-                                                class="fa-solid fa-house-chimney me-2 text-primary"></i>Endereço</label>
-                                        <small class="text-muted">(Opcional)</small>
-                                    </div>
-                                    <div class="position-relative"> <i
-                                            class="fa-solid fa-bars position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary fw-bold"></i>
-                                        <input type="text" name="" id="address"
-                                            class="form-control ps-5 border bg-light">
-                                    </div>
+                                    <label for="saleDate" class="form-label fs-5 fw-bold">Data da Venda</label>
+                                    <input type="date" id="saleDate" class="form-control bg-light" required>
                                 </div>
-                            </div> <!-- Fim da primeira linha em telas MD+ -->
-                            <div class="row">
-                                <div class="col-12 col-md-6 col-lg-6 mt-3"> <label
-                                        class="form-label fs-4 fw-bold">Produto</label> <select
-                                        class="form-select bg-light" id="product">
-                                        <option>Selecione...</option>
-                                    </select> </div>
-                                <div class="col-12 col-md-6 col-lg-2 mt-3"> <label
-                                        class="form-label fs-4 fw-bold">Quantidade</label>
-                                    <div class="input-group"> <button class="btn btn-light border"
-                                            onclick="decrement()">-</button> <input type="number"
-                                            class="form-control text-center" id="quantity" value="1"> <button
-                                            class="btn btn-light border" onclick="increment()">+</button> </div>
+                                <div class="col-12 col-md-6">
+                                    <label for="productId" class="form-label fs-5 fw-bold">Produto</label>
+                                    <select id="productId" class="form-select bg-light"></select>
                                 </div>
-                                <div class="col-12 col-md-6 col-lg-2 mt-3"> <label
-                                        class="form-label fs-4 fw-bold">Valor</label> <input type="text"
-                                        class="form-control" id="value" readonly> </div>
-                                <div class="col-12 col-md-6 col-lg-2 mt-3 d-flex align-items-end"> <button
-                                        id="mainButton" class="btn btn-primary w-100">
-                                        Cadastrar </button>
+                                <div class="col-12 col-md-2">
+                                    <label for="quantity" class="form-label fs-5 fw-bold">Quantidade</label>
+                                    <input type="number" id="quantity" class="form-control bg-light" min="1" value="1">
                                 </div>
-                            </div> <!-- Fim da segunda linha em telas LG / 3º em telas MD -->
-                            <div class="table-responsive table-container mt-5">
+                                <div class="col-12 col-md-2">
+                                    <label for="itemValue" class="form-label fs-5 fw-bold">Valor</label>
+                                    <input type="text" id="itemValue" class="form-control bg-light" readonly>
+                                </div>
+                                <div class="col-12 col-md-2 d-flex align-items-end">
+                                    <button id="addItemButton" class="btn btn-primary w-100" type="button">Adicionar</button>
+                                </div>
+                            </div>
+                            <div class="table-responsive table-container mt-4">
                                 <table class="table text-center" style="table-layout: fixed">
-                                    <colgroup>
-                                        <col style="width: 25%;">
-                                        <col style="width: 25%;">
-                                        <col style="width: 25%;">
-                                        <col style="width: 25%;">
-                                    </colgroup>
                                     <thead>
                                         <tr>
-                                            <th scope="col">Produtos</th>
-                                            <th scope="col">Quantidade</th>
-                                            <th scope="col">Valor</th>
-                                            <th scope="col">Ações</th>
+                                            <th>Produto</th>
+                                            <th>Quantidade</th>
+                                            <th>Valor</th>
+                                            <th>Acoes</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr> </tr>
+                                    <tbody id="saleItemsBody">
+                                        <tr>
+                                            <td colspan="4" class="text-muted py-4">Nenhum item adicionado.</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-
-                        <h4 class="d-flex flex-column mt-2">Valores</h4>
-                        <hr class="m-0 text-secondary">
-                        <div class="row d-flex justify-content-between">
-                            <div class="col-12 col-md-6 col-lg-6 mt-3"> <label class="form-label fs-4 fw-bold">Valor
-                                    Total</label>
-                                <input type="text" class="form-control w-100" id="totalValue" readonly>
-                            </div>
-                            <div class="col-12 col-md-6 col-lg-6 mt-3"> <label
-                                    class="form-label fs-4 fw-bold">Lucro</label>
-                                <input type="text" class="form-control w-100" id="profitValue" readonly>
-                            </div>
-                        </div>
-
-                        <hr class="m-o text-secondary">
-                        <div class="row">
-                            <div class="col-12 d-flex justify-content-end">
-                                <div class="col-12 col-md-6 col-lg-3">
-                                    <button class="btn btn-primary w-100" id="finishSale">Cadastrar Venda</button>
+                            <div class="row g-3 mt-2">
+                                <div class="col-12 col-md-6">
+                                    <label for="totalValue" class="form-label fs-5 fw-bold">Valor Total</label>
+                                    <input type="text" id="totalValue" class="form-control bg-light" readonly value="R$ 0,00">
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label for="profitValue" class="form-label fs-5 fw-bold">Lucro</label>
+                                    <input type="text" id="profitValue" class="form-control bg-light" readonly value="R$ 0,00">
                                 </div>
                             </div>
-                        </div>
+                            <div class="d-flex justify-content-end mt-4">
+                                <button id="finishSale" class="btn btn-primary px-4" type="button">Cadastrar Venda</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-        </div>
-        </main>
-    </div>
-    </div> <!-- Offcanvas fora do header (Barra lateral do mobile)-->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5> <button type="button"
-                class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body"> <a href="#" class="d-block mb-2 text-decoration-none">Configurações</a> <a href="#"
-                class="d-block mb-2 text-decoration-none">Sair</a> <a href="#"
-                class="d-block text-decoration-none">Usuário</a> </div>
-    </div>
-    <div class="modal fade" id="confirmModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirmar alteração</h5> <button type="button" class="btn-close"
-                        data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p id="confirmMessage"></p>
-                </div>
-                <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cancelar </button> <button type="button" class="btn btn-danger" id="confirmAction"> Confirmar
-                    </button> </div>
-            </div>
+            </main>
         </div>
     </div>
+    <div id="offcanvasMount"></div>
+    <div id="modalMount"></div>
+    <script type="module" src="js/newSale.js"></script>
 </body>
-<script type="module" src="js/newSale.js"></script>
-
 </html>

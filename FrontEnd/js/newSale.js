@@ -1,437 +1,191 @@
-import {
-    products,
-    customers,
-    sales,
-    getProductById,
-    getCustomerById
-} from "./FakeDatabase.js";
+import { getJSON, postJSON } from "./api.js";
+import { calculateSaleTotals, confirmAction, formatMoney, initShell, setButtonLoading, showAlert } from "./common.js";
 
-// ========================
-// ESTADO
-// ========================
+initShell("sale-form");
 
-let currentSale = {
-    customerId: null,
-    address: "",
-    items: []
-};
+const customerSelect = document.getElementById("customerId");
+const dateInput = document.getElementById("saleDate");
+const productSelect = document.getElementById("productId");
+const quantityInput = document.getElementById("quantity");
+const itemValueInput = document.getElementById("itemValue");
+const addItemButton = document.getElementById("addItemButton");
+const finishSaleButton = document.getElementById("finishSale");
+const tbody = document.getElementById("saleItemsBody");
+const totalValue = document.getElementById("totalValue");
+const profitValue = document.getElementById("profitValue");
 
-let editIndex = null;
+let products = [];
+let items = [];
+let editingIndex = null;
 
-// guarda valor anterior do endereço (ESSENCIAL)
-let previousAddress = "";
+dateInput.value = new Date().toISOString().slice(0, 10);
+loadBaseData();
 
-// trava pra não disparar loop
-let addressLock = false;
+productSelect.addEventListener("change", updateItemValue);
+quantityInput.addEventListener("input", updateItemValue);
 
-// ========================
-// ELEMENTOS
-// ========================
+addItemButton.addEventListener("click", () => {
+    const productId = Number(productSelect.value);
+    const quantity = Number(quantityInput.value);
 
-let productSelect;
-let quantityInput;
-let valueInput;
-let customerSelect;
-let addressInput;
-let mainButton;
-let totalInput;
-let profitInput;
-let finishButton;
-
-// ========================
-// ALERTA
-// ========================
-
-function showAlert(message, type = "danger") {
-    const container = document.getElementById("alertContainer");
-
-    const wrapper = document.createElement("div");
-
-    wrapper.innerHTML = `
-        <div class="alert alert-${type} alert-dismissible fade show shadow" role="alert">
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    `;
-
-    container.appendChild(wrapper);
-
-    setTimeout(() => wrapper.remove(), 3000);
-}
-
-// ========================
-// MODAL (FUNCIONANDO DE VERDADE)
-// ========================
-
-function showConfirmModal(message, onConfirm, onCancel) {
-    const modalElement = document.getElementById("confirmModal");
-    const modal = new bootstrap.Modal(modalElement);
-
-    document.getElementById("confirmMessage").textContent = message;
-
-    const confirmBtn = document.getElementById("confirmAction");
-
-    // remove eventos antigos (IMPORTANTE)
-    const newConfirmBtn = confirmBtn.cloneNode(true);
-    confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-
-    let canceled = true;
-
-    newConfirmBtn.addEventListener("click", () => {
-        canceled = false;
-        onConfirm?.();
-        modal.hide();
-    });
-
-    modalElement.addEventListener("hidden.bs.modal", () => {
-        if (canceled) {
-            onCancel?.();
-        }
-    }, { once: true });
-
-    modal.show();
-}
-
-// ========================
-// QUANTIDADE
-// ========================
-
-function increment() {
-    quantityInput.value = parseInt(quantityInput.value) + 1;
-    calculateValue();
-}
-
-function decrement() {
-    const value = parseInt(quantityInput.value);
-    if (value > 1) {
-        quantityInput.value = value - 1;
-        calculateValue();
-    }
-}
-
-// ========================
-// VALOR ITEM
-// ========================
-
-function calculateValue() {
-    const productId = parseInt(productSelect.value);
-
-    if (!productId) {
-        valueInput.value = "";
+    if (!productId || quantity <= 0) {
+        showAlert("Selecione um produto e informe uma quantidade valida.");
         return;
     }
 
-    const product = getProductById(productId);
-    const quantity = parseInt(quantityInput.value) || 1;
-
-    const total = product.sellValue * quantity;
-
-    valueInput.value = `R$ ${total.toFixed(2)}`;
-}
-
-// ========================
-// RESUMO
-// ========================
-
-function updateSummary() {
-    let total = 0;
-    let profit = 0;
-
-    currentSale.items.forEach(item => {
-        const product = getProductById(item.productId);
-
-        total += product.sellValue * item.quantity;
-        profit += (product.sellValue - product.costValue) * item.quantity;
-    });
-
-    totalInput.value = total ? `R$ ${total.toFixed(2)}` : "";
-    profitInput.value = profit ? `R$ ${profit.toFixed(2)}` : "";
-}
-
-// ========================
-// ITENS (SEM ALTERAÇÃO)
-// ========================
-
-function addItem() {
-    const productId = parseInt(productSelect.value);
-    const quantity = parseInt(quantityInput.value);
-
-    if (!productId) {
-        showAlert("Selecione um produto.", "warning");
-        return;
+    if (editingIndex === null) {
+        items.push({ productId, quantity });
+    } else {
+        items[editingIndex] = { productId, quantity };
+        editingIndex = null;
+        addItemButton.textContent = "Adicionar";
+        addItemButton.classList.remove("btn-warning");
+        addItemButton.classList.add("btn-primary");
     }
 
-    currentSale.items.push({ productId, quantity });
-
-    renderTable();
-    clearForm();
-}
-
-function updateItem() {
-    const productId = parseInt(productSelect.value);
-    const quantity = parseInt(quantityInput.value);
-
-    currentSale.items[editIndex] = { productId, quantity };
-
-    editIndex = null;
-
-    renderTable();
-    clearForm();
-    resetButton();
-}
-
-function editItem(index) {
-    const item = currentSale.items[index];
-
-    productSelect.value = item.productId;
-    quantityInput.value = item.quantity;
-
-    editIndex = index;
-
-    calculateValue();
-
-    mainButton.textContent = "Salvar";
-    mainButton.classList.remove("btn-primary");
-    mainButton.classList.add("btn-warning");
-}
-
-function deleteItem(index) {
-    showConfirmModal("Deseja remover este item?", () => {
-        currentSale.items.splice(index, 1);
-        renderTable();
-    });
-}
-
-function clearForm() {
     productSelect.value = "";
     quantityInput.value = 1;
-    valueInput.value = "";
-}
-
-function resetButton() {
-    mainButton.textContent = "Cadastrar";
-    mainButton.classList.remove("btn-warning");
-    mainButton.classList.add("btn-primary");
-}
-
-// ========================
-// SELECTS (SEM ALTERAÇÃO)
-// ========================
-
-function loadCustomers() {
-    customerSelect.innerHTML = `<option value="">Selecione...</option>`;
-
-    customers.forEach(c => {
-        const option = document.createElement("option");
-        option.value = c.id;
-        option.textContent = c.name;
-        customerSelect.appendChild(option);
-    });
-}
-
-function loadProducts() {
-    productSelect.innerHTML = `<option value="">Selecione...</option>`;
-
-    products.forEach(p => {
-        const option = document.createElement("option");
-        option.value = p.id;
-        option.textContent = p.name;
-        productSelect.appendChild(option);
-    });
-}
-
-// ========================
-// TABELA (SEM ALTERAÇÃO)
-// ========================
-
-function renderTable() {
-    const tbody = document.querySelector("tbody");
-    tbody.innerHTML = "";
-
-    currentSale.items.forEach((item, index) => {
-        const product = getProductById(item.productId);
-        const total = product.sellValue * item.quantity;
-
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-            <td>${product.name}</td>
-            <td>${item.quantity}</td>
-            <td>R$ ${total.toFixed(2)}</td>
-            <td>
-                <button class="btn btn-warning me-2" onclick="editItem(${index})">✏</button>
-                <button class="btn btn-danger" onclick="deleteItem(${index})">🗑</button>
-            </td>
-        `;
-
-        tbody.appendChild(tr);
-    });
-
-    for (let i = currentSale.items.length; i < 3; i++) {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>-</td><td>-</td><td>-</td><td>-</td>`;
-        tbody.appendChild(tr);
-    }
-
-    updateSummary();
-}
-
-// ========================
-// CLIENTE (SEM ALTERAÇÃO)
-// ========================
-
-function handleCustomerChange() {
-    const id = parseInt(customerSelect.value);
-
-    if (!id) {
-        currentSale.customerId = null;
-        currentSale.address = "";
-        addressInput.value = "";
-        return;
-    }
-
-    const customer = getCustomerById(id);
-
-    if (
-        currentSale.address &&
-        customer.address &&
-        currentSale.address !== customer.address
-    ) {
-        showConfirmModal(
-            "Deseja substituir o endereço pelo do cliente?",
-            () => {
-                currentSale.customerId = id;
-                currentSale.address = customer.address;
-                addressInput.value = customer.address;
-                previousAddress = customer.address;
-            },
-            () => {
-                customerSelect.value = currentSale.customerId || "";
-            }
-        );
-    } else {
-        currentSale.customerId = id;
-        currentSale.address = customer.address || "";
-        addressInput.value = currentSale.address;
-        previousAddress = currentSale.address;
-    }
-}
-
-// ========================
-// ENDEREÇO (CORRIGIDO DE VERDADE)
-// ========================
-
-function handleAddressChange() {
-    if (addressLock) return;
-
-    const typed = addressInput.value;
-
-    const customer = getCustomerById(currentSale.customerId);
-
-    if (!customer || !customer.address) {
-        currentSale.address = typed;
-        previousAddress = typed;
-        return;
-    }
-
-    if (typed === customer.address) {
-        currentSale.address = typed;
-        previousAddress = typed;
-        return;
-    }
-
-    addressLock = true;
-
-    showConfirmModal(
-        "O endereço é diferente do cliente. Deseja manter o novo endereço?",
-        () => {
-            currentSale.address = typed;
-            previousAddress = typed;
-            addressLock = false;
-        },
-        () => {
-            addressInput.value = previousAddress || customer.address;
-            currentSale.address = addressInput.value;
-            addressLock = false;
-        }
-    );
-}
-
-// ========================
-// FINALIZAR (SEM ALTERAÇÃO)
-// ========================
-
-function finishSale() {
-    if (currentSale.items.length === 0) {
-        showAlert("Adicione itens antes de finalizar.", "danger");
-        return;
-    }
-
-    showConfirmModal("Confirmar venda?", () => {
-        sales.push({
-            id: sales.length + 1,
-            customerId: currentSale.customerId,
-            address: currentSale.address,
-            saleDate: new Date(),
-            items: [...currentSale.items]
-        });
-
-        currentSale = {
-            customerId: null,
-            address: "",
-            items: []
-        };
-
-        renderTable();
-        clearForm();
-        resetButton();
-
-        totalInput.value = "";
-        profitInput.value = "";
-        customerSelect.value = "";
-        addressInput.value = "";
-
-        showAlert("Venda cadastrada!", "success");
-    });
-}
-
-// ========================
-// INIT
-// ========================
-
-document.addEventListener("DOMContentLoaded", () => {
-    productSelect = document.getElementById("product");
-    quantityInput = document.getElementById("quantity");
-    valueInput = document.getElementById("value");
-    customerSelect = document.getElementById("customer");
-    addressInput = document.getElementById("address");
-    mainButton = document.getElementById("mainButton");
-    totalInput = document.getElementById("totalValue");
-    profitInput = document.getElementById("profitValue");
-    finishButton = document.getElementById("finishSale");
-
-    loadCustomers();
-    loadProducts();
-    renderTable();
-
-    productSelect.addEventListener("change", calculateValue);
-    quantityInput.addEventListener("input", calculateValue);
-    customerSelect.addEventListener("change", handleCustomerChange);
-    addressInput.addEventListener("input", handleAddressChange);
-
-    mainButton.addEventListener("click", () => {
-        if (editIndex !== null) updateItem();
-        else addItem();
-    });
-
-    finishButton.addEventListener("click", finishSale);
+    updateItemValue();
+    renderItems();
 });
 
-// ========================
-// GLOBAL
-// ========================
+tbody.addEventListener("click", (event) => {
+    const action = event.target.dataset.action;
+    const index = Number(event.target.dataset.index);
 
-window.increment = increment;
-window.decrement = decrement;
-window.editItem = editItem;
-window.deleteItem = deleteItem;
+    if (action === "edit") {
+        const item = items[index];
+        productSelect.value = item.productId;
+        quantityInput.value = item.quantity;
+        editingIndex = index;
+        addItemButton.textContent = "Salvar Item";
+        addItemButton.classList.remove("btn-primary");
+        addItemButton.classList.add("btn-warning");
+        updateItemValue();
+    }
+
+    if (action === "delete") {
+        items.splice(index, 1);
+        renderItems();
+    }
+});
+
+finishSaleButton.addEventListener("click", async () => {
+    if (!customerSelect.value) {
+        showAlert("Selecione um cliente para concluir a venda.");
+        return;
+    }
+
+    if (!items.length) {
+        showAlert("Adicione pelo menos um item na venda.");
+        return;
+    }
+
+    const confirmed = await confirmAction("Deseja concluir esta venda?");
+    if (!confirmed) {
+        return;
+    }
+
+    const payload = {
+        customerId: Number(customerSelect.value),
+        date: dateInput.value,
+        items: items.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity
+        }))
+    };
+
+    setButtonLoading(finishSaleButton, true, finishSaleButton.textContent, "Salvando...");
+
+    try {
+        await postJSON("/sales", payload);
+        items = [];
+        editingIndex = null;
+        addItemButton.textContent = "Adicionar";
+        addItemButton.classList.remove("btn-warning");
+        addItemButton.classList.add("btn-primary");
+        renderItems();
+        document.getElementById("saleForm").reset();
+        dateInput.value = new Date().toISOString().slice(0, 10);
+        quantityInput.value = 1;
+        itemValueInput.value = "";
+        showAlert("Venda cadastrada com sucesso.", "success");
+    } catch (error) {
+        showAlert(error.message);
+    } finally {
+        setButtonLoading(finishSaleButton, false, finishSaleButton.textContent);
+    }
+});
+
+async function loadBaseData() {
+    try {
+        const [customersResponse, productsResponse] = await Promise.all([
+            getJSON("/customer"),
+            getJSON("/product")
+        ]);
+
+        products = productsResponse || [];
+
+        customerSelect.innerHTML = `<option value="">Selecione...</option>${customersResponse.map((customer) =>
+            `<option value="${customer.id}">${customer.name}</option>`).join("")}`;
+
+        productSelect.innerHTML = `<option value="">Selecione...</option>${products.map((product) =>
+            `<option value="${product.id}">${product.name}</option>`).join("")}`;
+    } catch (error) {
+        showAlert(error.message);
+    }
+}
+
+function updateItemValue() {
+    const product = products.find((item) => item.id === Number(productSelect.value));
+    const quantity = Number(quantityInput.value || 0);
+
+    itemValueInput.value = product ? formatMoney(Number(product.sellValue || 0) * quantity) : "";
+}
+
+function renderItems() {
+    if (!items.length) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4" class="text-muted py-4">Nenhum item adicionado.</td>
+            </tr>
+        `;
+        totalValue.value = formatMoney(0);
+        profitValue.value = formatMoney(0);
+        return;
+    }
+
+    tbody.innerHTML = items.map((item, index) => {
+        const product = products.find((entry) => entry.id === item.productId);
+        const lineTotal = Number(product?.sellValue || 0) * item.quantity;
+
+        return `
+            <tr>
+                <td>${product?.name || "-"}</td>
+                <td>${item.quantity}</td>
+                <td>${formatMoney(lineTotal)}</td>
+                <td>
+                    <div class="table-actions">
+                        <button class="btn btn-sm btn-warning" data-action="edit" data-index="${index}">Editar</button>
+                        <button class="btn btn-sm btn-danger" data-action="delete" data-index="${index}">Excluir</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join("");
+
+    const detailedItems = items.map((item) => {
+        const product = products.find((entry) => entry.id === item.productId);
+        return {
+            quantity: item.quantity,
+            product: {
+                sellValue: Number(product?.sellValue || 0),
+                costValue: Number(product?.costValue || 0)
+            }
+        };
+    });
+
+    const totals = calculateSaleTotals(detailedItems);
+    totalValue.value = formatMoney(totals.total);
+    profitValue.value = formatMoney(totals.profit);
+}

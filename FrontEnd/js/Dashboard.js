@@ -1,60 +1,57 @@
-import { products, sales } from "./FakeDatabase.js";
+import { getJSON } from "./api.js";
+import { calculateSaleTotals, formatMoney, initShell, showAlert } from "./common.js";
 
-const today = new Date();
+initShell("dashboard");
 
-const formatBRL = (value) =>
-  new Intl.NumberFormat("pt-BR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(value);
+loadDashboard();
 
+async function loadDashboard() {
+    try {
+        const [products, sales] = await Promise.all([
+            getJSON("/product"),
+            getJSON("/sales")
+        ]);
 
-// Funções 
-function isToday(date) {
-  return (
-    date.getDate() === today.getDate() &&
-    date.getMonth() === today.getMonth() &&
-    date.getFullYear() === today.getFullYear()
-  );
+        const today = new Date();
+        const totalStock = products.reduce((sum, product) => sum + Number(product.quantity || 0), 0);
+        const lowStock = products.filter((product) => Number(product.quantity || 0) < 15).length;
+        const dailySales = sales.filter((sale) => isSameDay(sale.saleDate, today));
+        const monthlySales = sales.filter((sale) => isSameMonth(sale.saleDate, today));
+
+        const dailyTotals = sumSales(dailySales);
+        const monthlyTotals = sumSales(monthlySales);
+
+        document.getElementById("total").textContent = totalStock;
+        document.getElementById("lowStockCount").textContent = lowStock;
+        document.getElementById("dailySalesCount").textContent = dailySales.length;
+        document.getElementById("monthlySalesCount").textContent = monthlySales.length;
+        document.getElementById("monthlySalesValue").textContent = formatMoney(monthlyTotals.total);
+        document.getElementById("monthlyProfit").textContent = formatMoney(monthlyTotals.profit);
+        document.getElementById("dailySalesValue").textContent = formatMoney(dailyTotals.total);
+        document.getElementById("dailyProfit").textContent = formatMoney(dailyTotals.profit);
+    } catch (error) {
+        showAlert(error.message);
+    }
 }
 
-function isThisMonth(date) {
-  return (
-    date.getMonth() === today.getMonth() &&
-    date.getFullYear() === today.getFullYear()
-  );
+function sumSales(sales) {
+    return sales.reduce((accumulator, sale) => {
+        const totals = calculateSaleTotals(sale.items || []);
+        accumulator.total += totals.total;
+        accumulator.profit += totals.profit;
+        return accumulator;
+    }, { total: 0, profit: 0 });
 }
 
-// Métricas
+function isSameDay(dateString, referenceDate) {
+    const date = new Date(`${dateString}T00:00:00`);
+    return date.getDate() === referenceDate.getDate()
+        && date.getMonth() === referenceDate.getMonth()
+        && date.getFullYear() === referenceDate.getFullYear();
+}
 
-const totalStock = products.reduce((t, p) => t + p.quantity, 0);
-
-const lowStockCount = products.filter(p => p.quantity < 15).length;
-
-const dailySales = sales.filter(s => isToday(s.saleDate));
-const dailySalesCount = dailySales.length;
-
-const monthlySales = sales.filter(s => isThisMonth(s.saleDate));
-const monthlySalesCount = monthlySales.length;
-
-const dailySalesValue = dailySales.reduce((t, s) => t + s.value, 0).toFixed(2);
-const dailyProfit = dailySales.reduce((t, s) => t + s.profit, 0);
-
-const monthlySalesValue = monthlySales.reduce((t, s) => t + s.value, 0).toFixed(2);
-const monthlyProfit = monthlySales.reduce((t, s) => t + s.profit, 0);
-
-// Inserir no HTML
-
-document.getElementById("total").textContent = totalStock;
-
-document.getElementById("lowStockCount").textContent = lowStockCount;
-
-document.getElementById("dailySalesCount").textContent = dailySalesCount;
-
-document.getElementById("monthlySalesCount").textContent = monthlySalesCount;
-
-document.getElementById("monthlySalesValue").textContent = "R$" + formatBRL(monthlySalesValue);
-document.getElementById("monthlyProfit").textContent = "R$" + formatBRL(monthlyProfit);
-
-document.getElementById("dailySalesValue").textContent = "R$" +  formatBRL(dailySalesValue);
-document.getElementById("dailyProfit").textContent = "R$" + formatBRL(dailyProfit);
+function isSameMonth(dateString, referenceDate) {
+    const date = new Date(`${dateString}T00:00:00`);
+    return date.getMonth() === referenceDate.getMonth()
+        && date.getFullYear() === referenceDate.getFullYear();
+}

@@ -1,283 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/b2f3875084.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="media/img/Logo.png" type="image/x-icon">
 </head>
-
 <body>
-    <header class="shadow px-4 py-2">
-        <div class="container-fluid d-flex align-items-center justify-content-between">
-
-            <!-- Logo -->
-            <div class="d-flex align-items-center">
-                <img src="media/img/Logo.png" class="logotype me-2" alt="StockMaster Logo">
-                <span class="text-primary fw-bold fs-4">StockMaster</span>
-            </div>
-
-            <!-- Itens do header (visíveis em telas grandes) -->
-            <div class="d-none d-xl-flex align-items-center gap-3">
-                <a href="#" class="text-secondary fs-5 text-decoration-none">Configurações</a>
-
-                <div class="vr"></div>
-
-                <a href="#" class="text-secondary fs-5 text-decoration-none">Sair</a>
-
-                <div class="vr"></div>
-
-                <a href="#" class="d-flex align-items-center gap-2 text-secondary text-decoration-none">
-                    <i class="fa-solid fa-circle-user fs-3"></i>
-                    <span class="fs-5">Usuário</span>
-                </a>
-            </div>
-
-            <!-- Hamburger (somente em telas pequenas) -->
-            <button class="btn d-xl-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu"
-                aria-controls="offcanvasMenu" aria-label="Toggle navigation">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-list"
-                    viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M2.5 12.5a.5.5 0 010-1h11a.5.5 0 010 1h-11zm0-4a.5.5 0 010-1h11a.5.5 0 010 1h-11zm0-4a.5.5 0 010-1h11a.5.5 0 010 1h-11z" />
-                </svg>
-            </button>
-
-        </div>
-    </header>
-
-
-
+    <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1055;"></div>
+    <div id="headerMount"></div>
     <div class="container-fluid">
         <div class="row layout">
-
-
-            <!-- Barra lateral (Somente em telas grandes) -->
-            <aside class="col-xl-2 d-none d-xl-block sidebar shadow-lg bg-primary px-0 py-3">
-                <nav class="sidebar-menu">
-
-                    <a href="#" class="sidebar-link text-decoration-none text-white fs-5 mb-2 active">
-                        <i class="fa-solid fa-chart-line me-2"></i>
-                        Dashboard
-                    </a>
-
-                    <!-- Vendas -->
-
-                    <a href="#menuVendas" class="sidebar-link text-decoration-none text-white fs-5 mb-2"
-                        data-bs-toggle="collapse">
-                        <i class="fa-solid fa-money-bills me-2"></i>
-                        Vendas
-                    </a>
-
-                    <div class="collapse submenu mb-2" id="menuVendas">
-                        <a href="Newsale.html" class="d-block ms-5 text-white text-decoration-none">• Cadastrar
-                            Venda</a>
-                        <a href="SaleList.html" class="d-block ms-5 text-white text-decoration-none">• Últimas Vendas</a>
-                    </div>
-
-                    <!-- Estoque -->
-
-                    <a href="#menuEstoque" class="sidebar-link text-decoration-none text-white fs-5 mb-2"
-                        data-bs-toggle="collapse">
-                        <i class="fa-solid fa-box-open me-2"></i>
-                        Estoque
-                    </a>
-
-                    <div class="collapse submenu mb-2" id="menuEstoque">
-                        <a href="newMovimentation.html" class="d-block ms-5 text-white text-decoration-none">•
-                            Movimentações</a>
-                    </div>
-
-                    <!-- Produtos -->
-                    <a href="#menuProdutos" class="sidebar-link text-decoration-none text-white fs-5 mb-2"
-                        data-bs-toggle="collapse">
-                        <i class="fa-solid fa-bag-shopping me-2"></i>
-                        Produtos
-                    </a>
-
-                    <div class="collapse submenu mb-2" id="menuProdutos">
-                        <a href="newProduct.html" class="d-block ms-5 text-white text-decoration-none">• Cadastrar
-                            Produto</a>
-                        <a href="templateList.html" class="d-block ms-5 text-white text-decoration-none">• Lista de Produto</a>
-                    </div>
-
-                    <!-- Cliente -->
-                    <a href="#menuClientes" class="sidebar-link text-decoration-none text-white fs-5 mb-2"
-                        data-bs-toggle="collapse">
-                        <i class="fa-solid fa-person-walking-luggage me-2"></i>
-                        Clientes
-                    </a>
-
-                    <div class="collapse submenu mb-2" id="menuClientes">
-                        <a href="newCustomer.html" class="d-block ms-5 text-white text-decoration-none">• Cadastrar
-                            Cliente</a>
-                        <a href="templateList.html" class="d-block ms-5 text-white text-decoration-none">• Lista de Clientes</a>
-                    </div>
-
-                    <!-- Fornecedor -->
-                    <a href="#menuFornecedor" class="sidebar-link text-decoration-none text-white fs-5 mb-2"
-                        data-bs-toggle="collapse">
-                        <i class="fa-solid fa-people-carry-box me-2"></i>
-                        Fornecedor
-                    </a>
-
-                    <div class="collapse submenu mb-2" id="menuFornecedor">
-                        <a href="newSupplier.html" class="d-block ms-5 text-white text-decoration-none">• Cadastrar
-                            Fornecedor</a>
-                        <a href="templateList.html" class="d-block ms-5 text-white text-decoration-none">• Lista de Fornecedores</a>
-                    </div>
-
-                    <!-- Funcionário -->
-                    <a href="#menuFuncionario" class="sidebar-link text-decoration-none text-white fs-5 mb-2"
-                        data-bs-toggle="collapse">
-                        <i class="fa-solid fa-users-gear me-2"></i>
-                        Funcionário
-                    </a>
-
-                    <div class="collapse submenu" id="menuFuncionario">
-                        <a href="newEmployer.html" class="d-block ms-5 text-white text-decoration-none">• Cadastrar novo
-                            Funcionário</a>
-                        <a href="templateList.html" class="d-block ms-5 text-white text-decoration-none">• Lista de Funcionários</a>
-                    </div>
-                </nav>
-            </aside>
-
-            <!-- Main -->
-
+            <aside id="sidebarMount"></aside>
             <main class="col-xl-10 col-12 content-area">
-
-                <!-- Row 1 -->
-                <div class="row">
-                    <!-- Estoque -->
-                    <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                        <div class="card shadow border-0">
-                            <div class="card-header bg-primary">
-                                <h6 class="text-center text-white h4 m-0">Produtos em Estoque</h6>
-                            </div>
-                            <div class="card-body d-flex justify-content-center align-items-center gap-3">
-                                <i class="fa-solid fa-box text-primary h2"></i>
-                                <h3 class="text-center fw-bold h2" id="total"></h3>
-                            </div>
+                <div class="row g-4">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card shadow border-0 stat-card">
+                            <div class="card-header bg-primary text-white"><h6 class="m-0 h5 text-center">Produtos em Estoque</h6></div>
+                            <div class="card-body d-flex justify-content-center align-items-center gap-3"><i class="fa-solid fa-box text-primary h2"></i><h3 class="fw-bold h2 m-0" id="total">0</h3></div>
                         </div>
                     </div>
-
-                    <!-- Baixo Estoque -->
-                    <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                        <div class="card shadow border-0">
-                            <div class="card-header bg-warning">
-                                <h6 class="text-center text-white h4 m-0">Baixo Estoque</h6>
-                            </div>
-                            <div class="card-body d-flex align-items-center justify-content-center gap-3">
-                                <i class="fa-solid fa-triangle-exclamation h2 text-warning"></i>
-                                <h3 class="text-center fw-bold h2" id="lowStockCount"></h3>
-                            </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card shadow border-0 stat-card">
+                            <div class="card-header bg-warning text-white"><h6 class="m-0 h5 text-center">Baixo Estoque</h6></div>
+                            <div class="card-body d-flex justify-content-center align-items-center gap-3"><i class="fa-solid fa-triangle-exclamation text-warning h2"></i><h3 class="fw-bold h2 m-0" id="lowStockCount">0</h3></div>
                         </div>
                     </div>
-                    <!-- Vendas do dia -->
-                    <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                        <div class="card shadow border-0">
-                            <div class="card-header bg-primary">
-                                <h6 class="text-center text-white h4 m-0" id="">Vendas do dia</h6>
-                            </div>
-                            <div class="card-body d-flex align-items-center justify-content-center gap-3">
-                                <i class="fa-solid fa-money-bill-1 h2 text-primary"></i>
-                                <h3 class="text-center fw-bold h2" id="dailySalesCount"></h3>
-                            </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card shadow border-0 stat-card">
+                            <div class="card-header bg-primary text-white"><h6 class="m-0 h5 text-center">Vendas do Dia</h6></div>
+                            <div class="card-body d-flex justify-content-center align-items-center gap-3"><i class="fa-solid fa-money-bill-1 text-primary h2"></i><h3 class="fw-bold h2 m-0" id="dailySalesCount">0</h3></div>
                         </div>
                     </div>
-                    <!-- Vendas do mês -->
-                    <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                        <div class="card shadow border-0">
-                            <div class="card-header bg-primary">
-                                <h6 class="text-center text-white h4 m-0">Vendas do Mês</h6>
-                            </div>
-                            <div class="card-body d-flex justify-content-center align-items-center gap-3">
-                                <i class="fa-solid fa-calendar h2 text-primary"></i>
-                                <h3 class="text-center fw-bold h2" id="monthlySalesCount"></h3>
-                            </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card shadow border-0 stat-card">
+                            <div class="card-header bg-primary text-white"><h6 class="m-0 h5 text-center">Vendas do Mes</h6></div>
+                            <div class="card-body d-flex justify-content-center align-items-center gap-3"><i class="fa-solid fa-calendar text-primary h2"></i><h3 class="fw-bold h2 m-0" id="monthlySalesCount">0</h3></div>
                         </div>
                     </div>
-
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card shadow border-0 stat-card">
+                            <div class="card-header bg-success text-white"><h6 class="m-0 h5 text-center">Receita do Mes</h6></div>
+                            <div class="card-body"><h3 class="text-center fw-bold h2 m-0" id="monthlySalesValue">R$ 0,00</h3></div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card shadow border-0 stat-card">
+                            <div class="card-header bg-success text-white"><h6 class="m-0 h5 text-center">Lucro do Mes</h6></div>
+                            <div class="card-body"><h3 class="text-center fw-bold h2 m-0" id="monthlyProfit">R$ 0,00</h3></div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card shadow border-0 stat-card">
+                            <div class="card-header bg-success text-white"><h6 class="m-0 h5 text-center">Receita do Dia</h6></div>
+                            <div class="card-body"><h3 class="text-center fw-bold h2 m-0" id="dailySalesValue">R$ 0,00</h3></div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card shadow border-0 stat-card">
+                            <div class="card-header bg-success text-white"><h6 class="m-0 h5 text-center">Lucro do Dia</h6></div>
+                            <div class="card-body"><h3 class="text-center fw-bold h2 m-0" id="dailyProfit">R$ 0,00</h3></div>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Row 2 -->
-                <div class="row">
-                    <!-- Receita mês -->
-                    <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                        <div class="card shadow border-0">
-                            <div class="card-header bg-success">
-                                <h6 class="text-center text-white h4 m-0">Receita do Mês</h6>
-                            </div>
-                            <div class="card-body">
-                                <h3 class="text-center fw-bold h2" id="monthlySalesValue"></h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Lucro mês -->
-                    <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                        <div class="card shadow border-0">
-                            <div class="card-header bg-success">
-                                <h6 class="text-center text-white h4 m-0">Lucro do Mês</h6>
-                            </div>
-                            <div class="card-body d-flex align-items-center justify-content-center gap-3">
-                                <h3 class="text-center fw-bold h2" id="monthlyProfit"></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Receita do dia -->
-                    <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                        <div class="card shadow border-0">
-                            <div class="card-header bg-success">
-                                <h6 class="text-center text-white h4 m-0">Receita do dia</h6>
-                            </div>
-                            <div class="card-body d-flex align-items-center justify-content-center gap-3">
-                                <h3 class="text-center fw-bold h2" id="dailySalesValue"></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- lucro do dia -->
-                    <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                        <div class="card shadow border-0">
-                            <div class="card-header bg-success">
-                                <h6 class="text-center text-white h4 m-0">Lucro do Dia</h6>
-                            </div>
-                            <div class="card-body d-flex justify-content-center align-items-center gap-3">
-                                <h3 class="text-center fw-bold h2" id="dailyProfit"></h3>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
             </main>
-
         </div>
     </div>
-
-    <!-- Offcanvas fora do header (Barra lateral do mobile)-->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <a href="#" class="d-block mb-2 text-decoration-none">Configurações</a>
-            <a href="#" class="d-block mb-2 text-decoration-none">Sair</a>
-            <a href="#" class="d-block text-decoration-none">Usuário</a>
-        </div>
-    </div>
-
-
+    <div id="offcanvasMount"></div>
+    <div id="modalMount"></div>
+    <script type="module" src="js/Dashboard.js"></script>
 </body>
-<script type="module" src="js/Dashboard.js"></script>
-
 </html>
