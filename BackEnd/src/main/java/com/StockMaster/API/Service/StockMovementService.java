@@ -1,15 +1,16 @@
 package com.StockMaster.API.Service;
 
 import com.StockMaster.API.DTO.StockMovementDTO;
+import com.StockMaster.API.Exceptions.BusinessException;
+import com.StockMaster.API.Exceptions.ResourceNotFoundException;
 import com.StockMaster.API.Models.MovementType;
 import com.StockMaster.API.Models.Product;
 import com.StockMaster.API.Models.StockMovement;
-import com.StockMaster.API.Repositories.ProductRepository;
 import com.StockMaster.API.Repositories.StockMovementRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -23,24 +24,29 @@ public class StockMovementService {
     }
 
     @Transactional
-    public StockMovement createMovement(StockMovementDTO DTO) {
-        Product p = pService.getProductById(DTO.getProductId());
-        MovementType type = DTO.getMovementType();
+    public StockMovement createMovement(StockMovementDTO dto) {
+        // CONSERTADO POR CODEX
+        validateMovement(dto);
+        Product product = pService.getProductById(dto.getProductId());
+        MovementType type = dto.getMovementType();
+
         if (type == MovementType.ENTRY) {
-            pService.increaseStock(p, DTO.getQuantity());
+            pService.increaseStock(product, dto.getQuantity());
         } else if (type == MovementType.EXIT) {
-            pService.decreaseProduct(p, DTO.getQuantity());
+            pService.decreaseProduct(product, dto.getQuantity());
         } else {
-            throw new RuntimeException("Escolha um tipo válido de movimento");
+            throw new BusinessException("Escolha um tipo válido de movimento.");
         }
+
         StockMovement movement = new StockMovement();
-        movement.setProduct(p);
-        movement.setQuantity(DTO.getQuantity());
-        movement.setMovementDate(DTO.getMovementDate());
+        movement.setProduct(product);
+        movement.setQuantity(dto.getQuantity());
+        movement.setMovementDate(dto.getMovementDate() != null ? dto.getMovementDate() : LocalDate.now());
         movement.setMovementType(type);
-        movement.setNotes(DTO.getNotes());
+        movement.setNotes(dto.getNotes());
 
         return repository.save(movement);
+        //CODEX
     }
 
     public List<StockMovement> getAllMovements() {
@@ -48,7 +54,8 @@ public class StockMovementService {
     }
 
     public StockMovement getMovementById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Essa movimentação não existe."));
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Essa movimentação não existe."));
     }
 
     @Transactional
@@ -64,4 +71,21 @@ public class StockMovementService {
 
         repository.delete(movement);
     }
+
+    // CONSERTADO POR CODEX
+    private void validateMovement(StockMovementDTO dto) {
+        if (dto == null) {
+            throw new BusinessException("Os dados da movimentação são obrigatórios.");
+        }
+        if (dto.getProductId() == null) {
+            throw new BusinessException("O produto da movimentação é obrigatório.");
+        }
+        if (dto.getQuantity() == null || dto.getQuantity() <= 0) {
+            throw new BusinessException("A quantidade da movimentação deve ser maior que zero.");
+        }
+        if (dto.getMovementType() == null) {
+            throw new BusinessException("O tipo da movimentação é obrigatório.");
+        }
+    }
+    //CODEX
 }

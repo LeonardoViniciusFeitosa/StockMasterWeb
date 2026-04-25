@@ -1,7 +1,6 @@
 package com.StockMaster.API.Controllers;
 
 import com.StockMaster.API.Models.Customer;
-import com.StockMaster.API.Models.Product;
 import com.StockMaster.API.Service.CustomerService;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,7 +8,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/customer")
-@CrossOrigin(origins = "*")
 public class CustomerController {
     private final CustomerService service;
 
@@ -39,6 +37,6 @@ public class CustomerController {
 
     @DeleteMapping("/{id}")
     public void deleteCustomer(@PathVariable Long id){
-        service.DeleteCustomerById(id);
+        service.deleteCustomerById(id);
     }
 }

@@ -1,5 +1,6 @@
 package com.StockMaster.API.Models;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,14 +9,20 @@ public class Employer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // CONSERTADO POR CODEX
+    @Column(nullable = false)
+    private String name;
+
+    @JsonAlias("document")
     @Column(nullable = false)
     private String personalId;
 
     @Column(nullable = false)
     private String address;
 
+    @JsonAlias("number")
     @Column(nullable = false)
-   private String phoneNumber;
+    private String phoneNumber;
 
     @Column(nullable = false)
     private String email;
@@ -23,12 +30,24 @@ public class Employer {
     @Column(nullable = false)
     private String role;
 
+    @Column(nullable = true)
+    private String notes;
+    //CODEX
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPersonalId() {
@@ -69,5 +88,13 @@ public class Employer {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

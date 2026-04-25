@@ -1,5 +1,6 @@
 package com.StockMaster.API.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -16,9 +17,12 @@ public class Product {
     @Column(nullable = false)
     private String category;
 
+    // CONSERTADO POR CODEX
     @ManyToOne
+    @JsonIgnoreProperties({"products"})
     @JoinColumn(name = "supplierId")
     private Supplier supplier;
+    //CODEX
 
     @Column(nullable = false)
     private Integer quantity;

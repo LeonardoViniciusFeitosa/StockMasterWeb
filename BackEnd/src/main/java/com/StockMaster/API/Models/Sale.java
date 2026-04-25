@@ -1,5 +1,6 @@
 package com.StockMaster.API.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -16,12 +17,15 @@ public class Sale {
     @Column(nullable = false)
     private LocalDate saleDate;
 
+    // CONSERTADO POR CODEX
     @ManyToOne
     @JoinColumn(name = "customerId")
     private Customer customer;
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("sale")
     private List<SaleItem> items = new ArrayList();
+    //CODEX
 
     public Long getId() {
         return id;
