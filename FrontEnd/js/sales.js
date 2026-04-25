@@ -54,7 +54,7 @@ async function loadSales() {
                     <td>${formatMoney(totals.total)}</td>
                     <td>${formatMoney(totals.profit)}</td>
                     <td>
-                        <button class="btn btn-sm btn-danger" data-sale-id="${sale.id}">Excluir</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-sale-id="${sale.id}">Excluir</button>
                     </td>
                 </tr>
             `;

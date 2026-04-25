@@ -138,7 +138,7 @@ export function initShell(activePage) {
                             <span class="fs-5" id="currentUserName">Carregando...</span>
                         </span>
                         <div class="vr"></div>
-                        <button id="logoutButtonDesktop" class="header-action-btn">Sair</button>
+                        <button type="button" id="logoutButtonDesktop" class="header-action-btn">Sair</button>
                     </div>
                     <button class="btn d-xl-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-label="Abrir menu">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
@@ -167,7 +167,7 @@ export function initShell(activePage) {
                 </div>
                 <div class="offcanvas-body bg-primary">
                     <nav class="sidebar-menu">${renderNav("mobile", activePage)}</nav>
-                    <button id="logoutButtonMobile" class="btn btn-light w-100 mt-3">Sair</button>
+                    <button type="button" id="logoutButtonMobile" class="btn btn-light w-100 mt-3">Sair</button>
                 </div>
             </div>
         `;

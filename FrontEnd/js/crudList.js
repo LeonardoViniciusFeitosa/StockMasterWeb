@@ -32,7 +32,7 @@ export function initCrudList(config) {
                 ? `<a href="${config.editHref}?id=${item.id}" class="btn btn-sm btn-warning">Editar</a>`
                 : "";
             const deleteButton = config.allowDelete !== false
-                ? `<button class="btn btn-sm btn-danger" data-action="delete" data-id="${item.id}">Excluir</button>`
+                ? `<button type="button" class="btn btn-sm btn-danger" data-action="delete" data-id="${item.id}">Excluir</button>`
                 : "";
 
             return `

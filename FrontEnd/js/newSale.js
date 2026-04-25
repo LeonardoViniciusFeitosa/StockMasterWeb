@@ -166,8 +166,8 @@ function renderItems() {
                 <td>${formatMoney(lineTotal)}</td>
                 <td>
                     <div class="table-actions">
-                        <button class="btn btn-sm btn-warning" data-action="edit" data-index="${index}">Editar</button>
-                        <button class="btn btn-sm btn-danger" data-action="delete" data-index="${index}">Excluir</button>
+                        <button type="button" class="btn btn-sm btn-warning" data-action="edit" data-index="${index}">Editar</button>
+                        <button type="button" class="btn btn-sm btn-danger" data-action="delete" data-index="${index}">Excluir</button>
                     </div>
                 </td>
             </tr>
