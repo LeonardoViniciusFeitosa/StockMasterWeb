@@ -44,6 +44,8 @@ Se a senha do seu MySQL for diferente, altere em:
 
 A API está configurada com `createDatabaseIfNotExist=true`, então o schema `stockmaster` será criado automaticamente se o usuário tiver permissão.
 
+Se quiser iniciar o sistema com dados de exemplo, o arquivo `StockMasterDatabaseDump.sql` foi incluído na raiz do projeto. Esse dump é opcional: ele serve para importar a estrutura com registros pré-carregados no MySQL, mas não é necessário para subir a aplicação, já que o banco é criado automaticamente.
+
 ### 2. Rodar o BackEnd
 
 No terminal, entre em `BackEnd` e execute:
