@@ -1,5 +1,6 @@
 package com.StockMaster.API.Models;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,14 +13,18 @@ public class Customer {
     @Column(nullable = false)
     private String name;
 
+    // CONSERTADO POR CODEX
+    @JsonAlias("document")
     @Column(nullable = false)
     private String personalId;
 
-    @Column(nullable = false)
-    private String Address;
+    @Column(name = "address", nullable = false)
+    private String address;
 
+    @JsonAlias("number")
     @Column(nullable = false)
     private String phoneNumber;
+    //CODEX
 
     @Column(nullable = false)
     private String email;
@@ -52,11 +57,11 @@ public class Customer {
     }
 
     public String getAddress() {
-        return Address;
+        return address;
     }
 
     public void setAddress(String address) {
-        Address = address;
+        this.address = address;
     }
 
     public String getPhoneNumber() {

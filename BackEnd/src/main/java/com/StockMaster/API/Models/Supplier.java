@@ -1,5 +1,6 @@
 package com.StockMaster.API.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -28,8 +29,11 @@ public class Supplier {
     @Column(nullable = true)
     private String notes;
 
+    // CONSERTADO POR CODEX
+    @JsonIgnore
     @OneToMany(mappedBy = "supplier")
     private List<Product> products;
+    //CODEX
 
     public Long getId() {
         return id;

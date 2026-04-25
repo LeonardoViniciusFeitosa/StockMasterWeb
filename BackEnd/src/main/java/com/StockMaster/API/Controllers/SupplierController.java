@@ -32,6 +32,13 @@ public class SupplierController {
         return service.getSupplierById(id);
     }
 
+    // CONSERTADO POR CODEX
+    @PutMapping("/{id}")
+    public Supplier updateSupplier(@PathVariable Long id, @RequestBody Supplier supplier) {
+        return service.updateSupplierById(id, supplier);
+    }
+    //CODEX
+
     @DeleteMapping("/{id}")
     public void deleteSupplier(@PathVariable Long id) {
         service.deleteSupplierById(id);

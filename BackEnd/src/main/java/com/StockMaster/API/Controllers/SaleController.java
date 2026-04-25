@@ -3,7 +3,6 @@ package com.StockMaster.API.Controllers;
 import com.StockMaster.API.DTO.SaleDTO;
 import com.StockMaster.API.Models.Sale;
 import com.StockMaster.API.Service.SaleService;
-import jakarta.persistence.PostLoad;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

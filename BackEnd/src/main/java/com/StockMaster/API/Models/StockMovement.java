@@ -1,5 +1,6 @@
 package com.StockMaster.API.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -11,9 +12,12 @@ public class StockMovement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // CONSERTADO POR CODEX
     @ManyToOne
+    @JsonIgnoreProperties({"supplier"})
     @JoinColumn(name = "productId")
     private Product product;
+    //CODEX
 
     @Column(nullable = false)
     private Integer quantity;

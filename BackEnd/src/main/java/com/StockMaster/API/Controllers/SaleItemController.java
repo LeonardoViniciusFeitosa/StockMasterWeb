@@ -16,28 +16,30 @@ public class SaleItemController {
         this.service = service;
     }
 
-    @PostMapping("/{saleId}/item")
+    // CONSERTADO POR CODEX
+    @PostMapping("/{saleId}/items")
     public SaleItem CreateSaleItem(@PathVariable Long saleId, @RequestBody SaleItemDTO dto) {
         return service.addItemToSale(saleId, dto);
     }
 
-    @GetMapping("/{saleId}/item")
+    @GetMapping("/{saleId}/items")
     public List<SaleItem> getItemsBySale(@PathVariable Long saleId){
         return service.getItemsBySale(saleId);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/items/{id}")
     public SaleItem getItemById(@PathVariable Long id){
         return service.getSaleItemById(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/items/{id}")
     public SaleItem updateItem(@PathVariable Long id, @RequestBody SaleItemDTO dto){
         return service.updateSaleItem(id, dto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/items/{id}")
     public void deleteItem(@PathVariable Long id){
         service.deleteSaleItemById(id);
     }
+    //CODEX
 }
